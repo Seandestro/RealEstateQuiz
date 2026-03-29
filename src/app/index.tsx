@@ -3,7 +3,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
-
   return (
     <View style={styles.container}>
       <Text style={styles.emoji}>🏡</Text>
@@ -11,12 +10,10 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>
         Master your market.{'\n'}One question at a time.
       </Text>
-
       <TouchableOpacity style={styles.button} onPress={() => router.push('/quiz')}>
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.secondaryButton}>
+      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.push('/login')}>
         <Text style={styles.secondaryButtonText}>Log In</Text>
       </TouchableOpacity>
     </View>
