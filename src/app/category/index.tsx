@@ -12,6 +12,9 @@ const CATEGORY_META: Record<string, { label: string; emoji: string; accent: stri
   parks:          { label: 'Parks',         emoji: '🌳', accent: '#8bc34a', bg: '#1e3a28', description: 'Outdoors & recreation' },
   healthcare:     { label: 'Healthcare',    emoji: '🏥', accent: '#26c6da', bg: '#1e3535', description: 'Hospitals, clinics & wellness' },
   transportation: { label: 'Transportation',emoji: '🚗', accent: '#ffc107', bg: '#2a2a1e', description: 'Commutes, transit & access' },
+  crime:          { label: 'Crime & Safety', emoji: '🛡️', accent: '#ef5350', bg: '#3a1e1e', description: 'Safety stats, data & Fair Housing' },
+  economics:      { label: 'Economics',      emoji: '💼', accent: '#66bb6a', bg: '#1e2e1e', description: 'Jobs, income & mortgage trends' },
+  development:    { label: 'Development',    emoji: '🏗️', accent: '#ffa726', bg: '#2e2a1e', description: 'Permits, zoning & growth' },
 };
 
 export default function CategoryScreen() {

@@ -92,6 +92,30 @@ const CATEGORIES = [
     color: '#2a2a1e',
     accent: '#ffc107',
   },
+  {
+    id: 'crime',
+    label: 'Crime & Safety',
+    emoji: '🛡️',
+    description: 'Safety stats & data',
+    color: '#3a1e1e',
+    accent: '#ef5350',
+  },
+  {
+    id: 'economics',
+    label: 'Economics',
+    emoji: '💼',
+    description: 'Jobs, income & rates',
+    color: '#1e2e1e',
+    accent: '#66bb6a',
+  },
+  {
+    id: 'development',
+    label: 'Development',
+    emoji: '🏗️',
+    description: 'Growth & new projects',
+    color: '#2e2a1e',
+    accent: '#ffa726',
+  },
 ];
 
 export default function MenuScreen() {

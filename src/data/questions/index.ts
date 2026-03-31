@@ -17,6 +17,9 @@ export { restaurantsQuestions } from './restaurants';
 export { parksQuestions } from './parks';
 export { healthcareQuestions } from './healthcare';
 export { transportationQuestions } from './transportation';
+export { crimeQuestions } from './crime';
+export { economicsQuestions } from './economics';
+export { developmentQuestions } from './development';
 
 import { marketQuestions } from './market';
 import { neighborhoodsQuestions } from './neighborhoods';
@@ -28,6 +31,9 @@ import { restaurantsQuestions } from './restaurants';
 import { parksQuestions } from './parks';
 import { healthcareQuestions } from './healthcare';
 import { transportationQuestions } from './transportation';
+import { crimeQuestions } from './crime';
+import { economicsQuestions } from './economics';
+import { developmentQuestions } from './development';
 
 export const ALL_QUESTIONS: Record<string, Question[]> = {
   market: marketQuestions,
@@ -40,4 +46,7 @@ export const ALL_QUESTIONS: Record<string, Question[]> = {
   parks: parksQuestions,
   healthcare: healthcareQuestions,
   transportation: transportationQuestions,
+  crime: crimeQuestions,
+  economics: economicsQuestions,
+  development: developmentQuestions,
 };

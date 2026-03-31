@@ -21,6 +21,9 @@ import { restaurantsRead } from './restaurants';
 import { parksRead } from './parks';
 import { healthcareRead } from './healthcare';
 import { transportationRead } from './transportation';
+import { crimeRead } from './crime';
+import { economicsRead } from './economics';
+import { developmentRead } from './development';
 
 export const ALL_QUICKREADS: Record<string, QuickReadData> = {
   market: marketRead,
@@ -33,4 +36,7 @@ export const ALL_QUICKREADS: Record<string, QuickReadData> = {
   parks: parksRead,
   healthcare: healthcareRead,
   transportation: transportationRead,
+  crime: crimeRead,
+  economics: economicsRead,
+  development: developmentRead,
 };
