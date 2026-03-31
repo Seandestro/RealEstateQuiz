@@ -1,18 +1,25 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LiveDataCard } from '../../components/LiveDataCard';
+import { getQuickRead } from '../../data/markets';
 import { ALL_QUICKREADS } from '../../data/quickreads';
+import { useLiveData } from '../../hooks/useLiveData';
+import { LIVE_DATA_CATEGORIES } from '../../services/liveData';
 
 const CATEGORY_META: Record<string, { label: string; emoji: string; accent: string }> = {
-  market:         { label: 'Market',        emoji: '📊', accent: '#4f8ef7' },
-  neighborhoods:  { label: 'Neighborhoods', emoji: '🏘️', accent: '#4caf50' },
-  schools:        { label: 'Schools',       emoji: '🎓', accent: '#ff9800' },
-  churches:       { label: 'Churches',      emoji: '⛪', accent: '#9c27b0' },
-  entertainment:  { label: 'Entertainment', emoji: '🎭', accent: '#e91e63' },
-  shopping:       { label: 'Shopping',      emoji: '🛍️', accent: '#00bcd4' },
-  restaurants:    { label: 'Restaurants',   emoji: '🍽️', accent: '#ff5722' },
-  parks:          { label: 'Parks',         emoji: '🌳', accent: '#8bc34a' },
-  healthcare:     { label: 'Healthcare',    emoji: '🏥', accent: '#26c6da' },
-  transportation: { label: 'Transportation',emoji: '🚗', accent: '#ffc107' },
+  market:         { label: 'Market',         emoji: '📊', accent: '#4f8ef7' },
+  neighborhoods:  { label: 'Neighborhoods',  emoji: '🏘️', accent: '#4caf50' },
+  schools:        { label: 'Schools',        emoji: '🎓', accent: '#ff9800' },
+  churches:       { label: 'Churches',       emoji: '⛪', accent: '#9c27b0' },
+  entertainment:  { label: 'Entertainment',  emoji: '🎭', accent: '#e91e63' },
+  shopping:       { label: 'Shopping',       emoji: '🛍️', accent: '#00bcd4' },
+  restaurants:    { label: 'Restaurants',    emoji: '🍽️', accent: '#ff5722' },
+  parks:          { label: 'Parks',          emoji: '🌳', accent: '#8bc34a' },
+  healthcare:     { label: 'Healthcare',     emoji: '🏥', accent: '#26c6da' },
+  transportation: { label: 'Transportation', emoji: '🚗', accent: '#ffc107' },
+  crime:          { label: 'Crime & Safety', emoji: '🛡️', accent: '#ef5350' },
+  economics:      { label: 'Economics',      emoji: '💼', accent: '#66bb6a' },
+  development:    { label: 'Development',    emoji: '🏗️', accent: '#ffa726' },
 };
 
 export default function QuickReadScreen() {
@@ -22,8 +29,14 @@ export default function QuickReadScreen() {
   }>();
 
   const meta = CATEGORY_META[category] ?? CATEGORY_META['market'];
-  const data = ALL_QUICKREADS[category] ?? ALL_QUICKREADS['market'];
+
+  // Use market-specific content when available, fall back to generic
+  const data = getQuickRead(category, city, state, ALL_QUICKREADS[category]);
   const locationLabel = [city, county, state].filter(Boolean).join(', ');
+
+  // Live data — only fetches for supported categories
+  const { loading, data: liveData, error } = useLiveData(category, city, state);
+  const hasLiveData = LIVE_DATA_CATEGORIES.has(category);
 
   return (
     <View style={styles.container}>
@@ -42,10 +55,20 @@ export default function QuickReadScreen() {
         {/* Title */}
         <Text style={styles.title}>{meta.label} Quick Read</Text>
         {locationLabel ? <Text style={styles.location}>📍 {locationLabel}</Text> : null}
-        <Text style={styles.intro}>{data.intro}</Text>
+        <Text style={styles.intro}>{data?.intro}</Text>
+
+        {/* Live Data Card — shown between intro and sections for relevant categories */}
+        {hasLiveData && (
+          <LiveDataCard
+            loading={loading}
+            data={liveData}
+            error={error}
+            accent={meta.accent}
+          />
+        )}
 
         {/* Sections */}
-        {data.sections.map((section) => (
+        {data?.sections.map((section) => (
           <View key={section.id} style={[styles.card, { borderLeftColor: meta.accent }]}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardIcon}>{section.icon}</Text>
@@ -82,10 +105,27 @@ export default function QuickReadScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0f0f1e' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 56, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#1a1a2e' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1a1a2e',
+  },
   backBtn: {},
   backText: { color: '#4f8ef7', fontSize: 15, fontWeight: '600' },
-  badge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, borderWidth: 1 },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
   badgeEmoji: { fontSize: 15 },
   badgeLabel: { fontSize: 13, fontWeight: '700' },
 
@@ -94,7 +134,13 @@ const styles = StyleSheet.create({
   location: { color: '#555577', fontSize: 13, marginBottom: 12 },
   intro: { color: '#a0a0c0', fontSize: 15, lineHeight: 24, marginBottom: 24 },
 
-  card: { backgroundColor: '#1a1a2e', borderRadius: 16, padding: 16, marginBottom: 16, borderLeftWidth: 3 },
+  card: {
+    backgroundColor: '#1a1a2e',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderLeftWidth: 3,
+  },
   cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
   cardIcon: { fontSize: 22 },
   cardTitle: { color: '#ffffff', fontSize: 16, fontWeight: 'bold', flex: 1 },
@@ -103,7 +149,15 @@ const styles = StyleSheet.create({
   bulletDot: { fontSize: 16, lineHeight: 22, marginTop: 1 },
   bulletText: { color: '#c0c0d8', fontSize: 14, lineHeight: 22, flex: 1 },
 
-  tipRow: { flexDirection: 'row', gap: 8, marginTop: 8, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#2a2a4a', alignItems: 'flex-start' },
+  tipRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 8,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#2a2a4a',
+    alignItems: 'flex-start',
+  },
   tipIcon: { fontSize: 15 },
   tipText: { color: '#7070a0', fontSize: 13, lineHeight: 19, flex: 1, fontStyle: 'italic' },
 
