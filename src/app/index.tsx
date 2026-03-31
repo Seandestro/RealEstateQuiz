@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -10,12 +10,12 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>
         Master your market.{'\n'}One question at a time.
       </Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/quiz')}>
+      <Pressable style={styles.button} onPress={() => router.push('/login')}>
         <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.push('/login')}>
+      </Pressable>
+      <Pressable style={styles.secondaryButton} onPress={() => router.push('/login')}>
         <Text style={styles.secondaryButtonText}>Log In</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginBottom: 16,
+    cursor: 'pointer',
   },
   buttonText: {
     color: '#ffffff',
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: '100%',
     alignItems: 'center',
+    cursor: 'pointer',
   },
   secondaryButtonText: {
     color: '#4f8ef7',

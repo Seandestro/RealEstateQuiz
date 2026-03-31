@@ -1,6 +1,15 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function LoginScreen() {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,112 +19,282 @@ export default function LoginScreen() {
 
   const router = useRouter();
 
+  function handleSubmit() {
+    router.push('/location');
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.emoji}>🏡</Text>
-      <Text style={styles.title}>{isLogin ? 'Welcome Back' : 'Create Account'}</Text>
-      <Text style={styles.subtitle}>
-        {isLogin ? 'Log in to continue your training' : 'Start mastering your market'}
-      </Text>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.logoCircle}>
+            <Text style={styles.logoEmoji}>🏡</Text>
+          </View>
+          <Text style={styles.appName}>RealQuiz</Text>
+          <Text style={styles.tagline}>
+            {isLogin ? 'Welcome back.' : 'Start your journey.'}
+          </Text>
+        </View>
 
-      {!isLogin && (
-        <TextInput
-          style={styles.input}
-          placeholder="Full Name"
-          placeholderTextColor="#666"
-          value={name}
-          onChangeText={setName}
-        />
-      )}
+        {/* Tab switcher */}
+        <View style={styles.tabRow}>
+          <TouchableOpacity
+            style={[styles.tab, isLogin && styles.tabActive]}
+            onPress={() => setIsLogin(true)}
+          >
+            <Text style={[styles.tabText, isLogin && styles.tabTextActive]}>Log In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, !isLogin && styles.tabActive]}
+            onPress={() => setIsLogin(false)}
+          >
+            <Text style={[styles.tabText, !isLogin && styles.tabTextActive]}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#666"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+        {/* Form */}
+        <View style={styles.form}>
+          {!isLogin && (
+            <View style={styles.inputWrapper}>
+              <Text style={styles.inputLabel}>Full Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Jane Smith"
+                placeholderTextColor="#555577"
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
+            </View>
+          )}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#666"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Email</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="you@example.com"
+              placeholderTextColor="#555577"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/quiz')}>
-        <Text style={styles.buttonText}>{isLogin ? 'Log In' : 'Sign Up'}</Text>
-      </TouchableOpacity>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="••••••••"
+              placeholderTextColor="#555577"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </View>
 
-      <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
-        <Text style={styles.switchText}>
-          {isLogin ? "Don't have an account? " : 'Already have an account? '}
-          <Text style={styles.switchLink}>{isLogin ? 'Sign Up' : 'Log In'}</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+          {isLogin && (
+            <TouchableOpacity style={styles.forgotRow}>
+              <Text style={styles.forgotText}>Forgot password?</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>
+              {isLogin ? 'Log In' : 'Create Account'}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.dividerRow}>
+            <View style={styles.divider} />
+            <Text style={styles.dividerText}>or continue with</Text>
+            <View style={styles.divider} />
+          </View>
+
+          <View style={styles.socialRow}>
+            <TouchableOpacity style={styles.socialButton} onPress={handleSubmit}>
+              <Text style={styles.socialText}>G  Google</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton} onPress={handleSubmit}>
+              <Text style={styles.socialText}>  Apple</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Guest option */}
+        <TouchableOpacity style={styles.guestRow} onPress={() => router.push('/location')}>
+          <Text style={styles.guestText}>Continue as guest</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#0f0f1e',
+  },
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#0f0f1e',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 60,
+    paddingBottom: 40,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  logoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#1e1e3a',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    marginBottom: 12,
+    borderWidth: 1.5,
+    borderColor: '#3a3a5a',
   },
-  emoji: {
-    fontSize: 56,
-    marginBottom: 16,
+  logoEmoji: {
+    fontSize: 38,
   },
-  title: {
-    fontSize: 32,
+  appName: {
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#ffffff',
-    marginBottom: 8,
+    letterSpacing: 1,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#a0a0b0',
-    marginBottom: 32,
-    textAlign: 'center',
+  tagline: {
+    fontSize: 15,
+    color: '#7070a0',
+    marginTop: 4,
+  },
+  tabRow: {
+    flexDirection: 'row',
+    backgroundColor: '#1a1a2e',
+    borderRadius: 14,
+    padding: 4,
+    width: '100%',
+    marginBottom: 28,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  tabActive: {
+    backgroundColor: '#4f8ef7',
+  },
+  tabText: {
+    color: '#7070a0',
+    fontWeight: '600',
+    fontSize: 15,
+  },
+  tabTextActive: {
+    color: '#ffffff',
+  },
+  form: {
+    width: '100%',
+  },
+  inputWrapper: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    color: '#a0a0c0',
+    fontSize: 13,
+    fontWeight: '600',
+    marginBottom: 6,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
   input: {
-    backgroundColor: '#2a2a4a',
+    backgroundColor: '#1a1a2e',
     color: '#ffffff',
     width: '100%',
     padding: 16,
     borderRadius: 12,
-    marginBottom: 16,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#3a3a5a',
+    borderWidth: 1.5,
+    borderColor: '#2a2a4a',
+  },
+  forgotRow: {
+    alignSelf: 'flex-end',
+    marginBottom: 20,
+    marginTop: -4,
+  },
+  forgotText: {
+    color: '#4f8ef7',
+    fontSize: 14,
   },
   button: {
     backgroundColor: '#4f8ef7',
     paddingVertical: 16,
-    borderRadius: 30,
+    borderRadius: 14,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 24,
     marginTop: 8,
+    shadowColor: '#4f8ef7',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 6,
   },
   buttonText: {
     color: '#ffffff',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
-  switchText: {
-    color: '#a0a0b0',
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 24,
+    gap: 12,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#2a2a4a',
+  },
+  dividerText: {
+    color: '#555577',
+    fontSize: 13,
+  },
+  socialRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  socialButton: {
+    flex: 1,
+    backgroundColor: '#1a1a2e',
+    borderWidth: 1.5,
+    borderColor: '#2a2a4a',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  socialText: {
+    color: '#ffffff',
     fontSize: 15,
+    fontWeight: '600',
   },
-  switchLink: {
-    color: '#4f8ef7',
-    fontWeight: 'bold',
+  guestRow: {
+    marginTop: 28,
+  },
+  guestText: {
+    color: '#555577',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });
