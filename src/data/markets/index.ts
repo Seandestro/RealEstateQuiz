@@ -12,10 +12,12 @@ export type MarketData = {
 };
 
 import { laJollaMarket } from './la-jolla';
+import { sanDiegoMarket } from './san-diego';
 
 // All known markets — add new cities here
 const MARKETS: MarketData[] = [
   laJollaMarket,
+  sanDiegoMarket,
 ];
 
 /**
